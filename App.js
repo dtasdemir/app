@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
@@ -6,7 +6,7 @@ import Products from './src/screens/Products';
 import ProductDetail from './src/screens/ProductDetail';
 
 import m from './src/style/MStyle';
-import {Provider, useDispatch} from 'react-redux';
+import {Provider} from 'react-redux';
 
 import store from './src/redux/index';
 
