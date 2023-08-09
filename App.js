@@ -18,12 +18,13 @@ export default function App() {
     <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator
+          initialRouteName='products'
           screenOptions={{
             headerShown: false,
             statusBarColor: m.primaryColor,
           }}>
           <Stack.Screen name="products" component={Products} />
-          <Stack.Screen name="productsDetail" component={ProductDetail} />
+          <Stack.Screen name="productsDetail" component={ProductDetail} initialParams={{ DataP: [] }} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

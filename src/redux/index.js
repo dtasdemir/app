@@ -7,6 +7,6 @@ import categorySlice from "./store/categorySlice";
 export default configureStore({
     reducer: {
         products: productsSlice,
-        categories: categorySlice,
+        category: categorySlice,
     }
 })
