@@ -3,7 +3,6 @@ import axios from "axios";
 
 export const fetchCategory = createAsyncThunk('category/fetchCategory', async () => {
     const res = await axios.get('https://dummyjson.com/products/categories');
-    console.log(res.data);
     return res.data;
 })
 
