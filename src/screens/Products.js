@@ -15,6 +15,7 @@ import ListFooterLoadIndicator from '../component/loadIndicator/ListFooterLoadIn
 import m from '../style/MStyle';
 import FilterButton from '../component/buttons/FilterButtons';
 import ProductSearchAndFilterCard from '../component/cards/ProductsSearchAndFilterCard';
+import FilterModals from '../component/modals/FilterModals';
 
 export default function Products({navigation}) {
   const dispatch = useDispatch();
@@ -30,6 +31,15 @@ export default function Products({navigation}) {
   const [Search, setSearch] = useState('');
 
   const CategoryData = useSelector(state => state.category.categories); //Category Data
+
+  const [CategoriesModal, setCategoriesModal] = useState(false);
+
+  const [Categories, setCategories] = useState('');
+
+  const handleCategoryPress = (category) => {
+    setCategories(category);
+    //setCategoriesModal(false);
+  }
 
   const uploadData = () => {
     const startIndex = LoadedData.length;
@@ -57,7 +67,7 @@ export default function Products({navigation}) {
             SearchValue={Search}
             onChangeText={s => setSearch(s)}
             onRating={() => console.log('Rating')}
-            onCategories={() => console.log('Categories')}
+            onCategories={() => setCategoriesModal(true)}
             onPricing={() => console.log('Pricing')}
           />
         }
@@ -85,6 +95,15 @@ export default function Products({navigation}) {
             />
           </View>
         )}
+      />
+      
+      <FilterModals 
+        modalVisible={CategoriesModal}
+        handleClose={() => setCategoriesModal(false)}
+        HeadTitle="Kategoriler"
+        FilterData={CategoryData}
+        onPress={handleCategoryPress}
+        isSelected={Categories}
       />
     </View>
   );
