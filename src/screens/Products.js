@@ -1,17 +1,20 @@
-import {Button, SearchBar} from '@rneui/themed';
 import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, ScrollView} from 'react-native';
-import {View, Text, FlatList} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import ProductCard from '../component/cards/ProductCard';
+import {View, Text, FlatList} from 'react-native';
+import {Button, SearchBar} from '@rneui/themed';
 
-// Custom Component
-import LoadIndicator from '../component/loadIndicator/LoadIndicator';
 import {fetchCategory} from '../redux/store/categorySlice';
 import {fetchData} from '../redux/store/productsSlice';
 
+// Custom Component
+import ProductCard from '../component/cards/ProductCard';
+import LoadIndicator from '../component/loadIndicator/LoadIndicator';
+import ListFooterLoadIndicator from '../component/loadIndicator/ListFooterLoadIndicator';
+
 // Custom Css Style
 import m from '../style/MStyle';
+import FilterButton from '../component/buttons/FilterButtons';
+import ProductSearchAndFilterCard from '../component/cards/ProductsSearchAndFilterCard';
 
 export default function Products({navigation}) {
   const dispatch = useDispatch();
@@ -24,6 +27,8 @@ export default function Products({navigation}) {
 
   const [LoadedData, setLoadedData] = useState(data);
 
+  const [Search, setSearch] = useState('');
+
   const CategoryData = useSelector(state => state.category.categories); //Category Data
 
   const uploadData = () => {
@@ -31,52 +36,6 @@ export default function Products({navigation}) {
     const endIndex = startIndex + 2;
     const newData = DataP.slice(startIndex, endIndex);
     setLoadedData(prev => [...prev, ...newData]);
-  };
-
-  const HeaderItem = () => {
-    return (
-      <View style={[m.pv(12), m.ph(12), m.bg(m.white), m.mb(12)]}>
-        <SearchBar
-          placeholder="Dilediğini ara..."
-          platform="android"
-          containerStyle={[
-            m.bg(m.grayTransparent),
-            m.rad(24),
-            m.h(40),
-            m.hcenter,
-          ]}
-        />
-
-        <View style={[m.row,  m.mt(8)]}>
-          <Button
-            title="Değerlendirme"
-            type="default"
-            titleStyle={[m.fontSCW(12, m.darkGray, '500')]}
-            containerStyle={[m.b(0.8), m.bC(m.darkGray), m.rad(24)]}
-          />
-          <Button
-            title="Fiyat"
-            type="default"
-            titleStyle={[m.fontSCW(12, m.darkGray, '500')]}
-            containerStyle={[m.b(0.8), m.bC(m.darkGray), m.rad(24), m.mh(8)]}
-          />
-          <Button
-            title="Kategori"
-            type="default"
-            titleStyle={[m.fontSCW(12, m.darkGray, '500')]}
-            containerStyle={[m.b(0.8), m.bC(m.darkGray), m.rad(24)]}
-          />
-        </View>
-      </View>
-    );
-  };
-
-  const LoaderItem = () => {
-    return LoadedData.length >= DataP.length ? null : (
-      <View style={[m.mv(12), m.hcenter]}>
-        <ActivityIndicator size="large" color={m.black} />
-      </View>
-    );
   };
 
   useEffect(() => {
@@ -93,10 +52,20 @@ export default function Products({navigation}) {
   ) : (
     <View style={[m.container]}>
       <FlatList
-        ListHeaderComponent={HeaderItem}
+        ListHeaderComponent={
+          <ProductSearchAndFilterCard
+            SearchValue={Search}
+            onChangeText={s => setSearch(s)}
+            onRating={() => console.log('Rating')}
+            onCategories={() => console.log('Categories')}
+            onPricing={() => console.log('Pricing')}
+          />
+        }
         showsVerticalScrollIndicator={false}
         data={LoadedData}
-        ListFooterComponent={LoaderItem}
+        ListFooterComponent={
+          LoadedData.length >= DataP.length ? null : <ListFooterLoadIndicator />
+        }
         keyExtractor={(item, index) => item + index}
         numColumns={'2'}
         onEndReached={uploadData}
@@ -104,14 +73,16 @@ export default function Products({navigation}) {
         style={[]}
         renderItem={({item}) => (
           <View style={[m.pl(4)]}>
-          <ProductCard
-            onPress={() => navigation.navigate('productsDetail', {DataP: item})}
-            ImgSrc={{uri: item.images[0]}}
-            Brand={item.brand}
-            Info={item.title}
-            Rating={item.rating}
-            Price={item.price}
-          />
+            <ProductCard
+              onPress={() =>
+                navigation.navigate('productsDetail', {DataP: item})
+              }
+              ImgSrc={{uri: item.images[0]}}
+              Brand={item.brand}
+              Info={item.title}
+              Rating={item.rating}
+              Price={item.price}
+            />
           </View>
         )}
       />
