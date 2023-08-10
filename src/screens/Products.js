@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {View, Text, FlatList} from 'react-native';
-import {Button, SearchBar} from '@rneui/themed';
 
 import {fetchCategory} from '../redux/store/categorySlice';
 import {fetchData} from '../redux/store/productsSlice';
@@ -10,12 +9,11 @@ import {fetchData} from '../redux/store/productsSlice';
 import ProductCard from '../component/cards/ProductCard';
 import LoadIndicator from '../component/loadIndicator/LoadIndicator';
 import ListFooterLoadIndicator from '../component/loadIndicator/ListFooterLoadIndicator';
+import ProductSearchAndFilterCard from '../component/cards/ProductsSearchAndFilterCard';
+import FilterModals from '../component/modals/FilterModals';
 
 // Custom Css Style
 import m from '../style/MStyle';
-import FilterButton from '../component/buttons/FilterButtons';
-import ProductSearchAndFilterCard from '../component/cards/ProductsSearchAndFilterCard';
-import FilterModals from '../component/modals/FilterModals';
 
 export default function Products({navigation}) {
   const dispatch = useDispatch();
@@ -50,8 +48,24 @@ export default function Products({navigation}) {
 
   useEffect(() => {
     dispatch(fetchData());
-    dispatch(fetchCategory());
+    dispatch(fetchCategory()); 
   }, [dispatch]);
+
+
+  useEffect(() => {
+    if(!load && DataP.length > 0) {
+      const filteredDatas = DataP.filter(i => {
+        const SearchData = String(i.title + i.info + i.brand)
+          .toLowerCase()
+          .includes(Search.toLowerCase());
+        const CategoriesData = i.category === Categories;
+  
+        return SearchData && CategoriesData;
+      });
+  
+      setLoadedData(filteredDatas.slice(0, 6));
+    }
+  }, [Search, Categories, DataP])
 
   return load ? (
     <LoadIndicator />
@@ -96,7 +110,7 @@ export default function Products({navigation}) {
           </View>
         )}
       />
-      
+
       <FilterModals 
         modalVisible={CategoriesModal}
         handleClose={() => setCategoriesModal(false)}
