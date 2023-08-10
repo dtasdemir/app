@@ -103,6 +103,7 @@ export default function Products({navigation}) {
         onEndReachedThreshold={0.1}
         style={[]}
         renderItem={({item}) => (
+          <View style={[m.pl(4)]}>
           <ProductCard
             onPress={() => navigation.navigate('productsDetail', {DataP: item})}
             ImgSrc={{uri: item.images[0]}}
@@ -111,6 +112,7 @@ export default function Products({navigation}) {
             Rating={item.rating}
             Price={item.price}
           />
+          </View>
         )}
       />
     </View>

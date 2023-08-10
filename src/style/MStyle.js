@@ -66,6 +66,9 @@ export default mStyle = StyleSheet.create({
     resW: (ValueP) => ({
         width: width*ValueP
     }),
+    cardW: {
+        width: (width/ 2 )-16
+    },
 
     //#endregion
 

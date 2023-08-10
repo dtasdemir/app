@@ -9,7 +9,6 @@ import m from './src/style/MStyle';
 import {Provider} from 'react-redux';
 
 import store from './src/redux/index';
-
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -21,7 +20,9 @@ export default function App() {
           initialRouteName='products'
           screenOptions={{
             headerShown: false,
-            statusBarColor: m.primaryColor,
+            statusBarColor: m.white,
+            statusBarStyle: "dark"
+            
           }}>
           <Stack.Screen name="products" component={Products} />
           <Stack.Screen name="productsDetail" component={ProductDetail} initialParams={{ DataP: [] }} />
